@@ -9,10 +9,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.*;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LoginSignScene extends SceneController{
     @Override
@@ -76,7 +78,7 @@ public class LoginSignScene extends SceneController{
             String inEmail = emailField.getText();
             String inPassword = passwordField.getText();
             String rankSet = setRank.getValue();
-            if (inEmail==null || inPassword==null || Objects.equals(rankSet, "--Select a Rank--")){
+            if (inEmail==null || inPassword==null || rankSet.equals("--Select a Rank--")){
                 Alert error = new Alert(Alert.AlertType.ERROR);
                 error.setTitle("Error!");
                 error.setHeaderText("At least One of the Inputs Are Invalid!");
@@ -114,18 +116,29 @@ public class LoginSignScene extends SceneController{
         forgotPass.setLayoutX(350);
         forgotPass.setLayoutY(570);
         forgotPass.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
-        forgotPass.setOnAction(forgotPassEvent -> {
-            Dialog<String>forForgotPass = new Dialog<>();
+        forgotPass.setOnAction((forgotPassEvent) -> {
+            TextInputDialog forForgotPass = new TextInputDialog();
             forForgotPass.setTitle("Forgot Password");
-            forForgotPass.setHeaderText("Please Enter Your Email");
-            ButtonType okButton = new ButtonType("OK");
-            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            forForgotPass.getDialogPane().getButtonTypes().addAll();
-            TextField forEmail = new TextField();
-            forForgotPass.getDialogPane().setContent(new Pane());
-            forForgotPass.getDialogPane().setExpandableContent(forEmail);
-            String result = forForgotPass.showAndWait().orElse("Nothing Entered");
+            forForgotPass.setHeaderText("Enter Your Email");
+            forForgotPass.setContentText("Email");
+
+            forForgotPass.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+            forForgotPass.initModality(Modality.APPLICATION_MODAL);
+            Optional<String> result = forForgotPass.showAndWait();
+            if (result.isPresent() && !result.get().isEmpty()) {
+                String mail = result.get();
+                System.out.println(mail);
+            } else if (!result.isPresent()) {
+                forForgotPass.close();
+            } else{
+                Alert noMail = new Alert(Alert.AlertType.ERROR);
+                noMail.setTitle("Error!");
+                noMail.setHeaderText("Please Provide a Valid Email!");
+                noMail.showAndWait();
+                forgotPass.fire();
+            }
         });
+
 
         Line upperLine = new Line(820,240,820,420);
 
@@ -183,9 +196,6 @@ public class LoginSignScene extends SceneController{
         stage.setWidth(1600);
         stage.setResizable(false);
         stage.show();
-    }
-    public void forgotPassAlert(){
-
     }
 
 }
