@@ -11,10 +11,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.sql.*;
-import java.util.Objects;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Optional;
+
+import static java.lang.Integer.parseInt;
 
 public class LoginSignScene extends SceneController{
     @Override
@@ -117,28 +122,14 @@ public class LoginSignScene extends SceneController{
         forgotPass.setLayoutY(570);
         forgotPass.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
         forgotPass.setOnAction((forgotPassEvent) -> {
-            TextInputDialog forForgotPass = new TextInputDialog();
-            forForgotPass.setTitle("Forgot Password");
-            forForgotPass.setHeaderText("Enter Your Email");
-            forForgotPass.setContentText("Email");
-
-            forForgotPass.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
-            forForgotPass.initModality(Modality.APPLICATION_MODAL);
-            Optional<String> result = forForgotPass.showAndWait();
-            if (result.isPresent() && !result.get().isEmpty()) {
-                String mail = result.get();
-                System.out.println(mail);
-            } else if (!result.isPresent()) {
-                forForgotPass.close();
-            } else{
-                Alert noMail = new Alert(Alert.AlertType.ERROR);
-                noMail.setTitle("Error!");
-                noMail.setHeaderText("Please Provide a Valid Email!");
-                noMail.showAndWait();
-                forgotPass.fire();
+            final int OTP = forForgotPass(forgotPass);
+            final boolean change = OTPMatch(OTP,forgotPass);
+            if (change){
+                System.out.println("Will Change");
+            }else {
+                System.out.println("Won't Change");
             }
         });
-
 
         Line upperLine = new Line(820,240,820,420);
 
@@ -196,6 +187,74 @@ public class LoginSignScene extends SceneController{
         stage.setWidth(1600);
         stage.setResizable(false);
         stage.show();
+    }
+
+    private boolean OTPMatch(int OTP, Button forgotPass) {
+        TextInputDialog forOTPMatch = new TextInputDialog();
+        forOTPMatch.setTitle("OTP");
+        forOTPMatch.setHeaderText("Enter Your OTP");
+        forOTPMatch.setContentText("OTP: ");
+
+        forOTPMatch.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+        forOTPMatch.initModality(Modality.APPLICATION_MODAL);
+        Optional<String> result = forOTPMatch.showAndWait();
+        if (result.isPresent() && !result.get().isEmpty()) {
+            int curOTP = parseInt(result.get());
+            if (OTP!=curOTP){
+                Alert noMail = new Alert(Alert.AlertType.ERROR);
+                noMail.setTitle("Error!");
+                noMail.setHeaderText("Please Provide the Correct OTP Next Time!");
+                noMail.showAndWait();
+                forOTPMatch.close();
+                forgotPass.fire();
+                return false;
+            }else{
+                return true;
+            }
+        } else if (!result.isPresent()) {
+            forOTPMatch.close();
+            return false;
+        } else{
+            Alert noMail = new Alert(Alert.AlertType.ERROR);
+            noMail.setTitle("Error!");
+            noMail.setHeaderText("Please Provide the Correct OTP Next Time!");
+            noMail.showAndWait();
+            forOTPMatch.close();
+            forgotPass.fire();
+            return false;
+        }
+    }
+
+    public int forForgotPass(Button forgotPass){
+        TextInputDialog forForgotPass = new TextInputDialog();
+        forForgotPass.setTitle("Forgot Password");
+        forForgotPass.setHeaderText("Enter Your Email");
+        forForgotPass.setContentText("Email: ");
+
+        forForgotPass.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+        forForgotPass.initModality(Modality.APPLICATION_MODAL);
+        Optional<String> result = forForgotPass.showAndWait();
+        int OTP = 0;
+        if (result.isPresent() && !result.get().isEmpty()) {
+            String mail = result.get();
+            String subject = "Password Reset";
+            SendMail sendMail = new SendMail();
+            Session newSession = sendMail.setupServerProperties();
+            try {
+                OTP = sendMail.draftEmail(newSession, mail, subject);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (!result.isPresent()) {
+            forForgotPass.close();
+        } else{
+            Alert noMail = new Alert(Alert.AlertType.ERROR);
+            noMail.setTitle("Error!");
+            noMail.setHeaderText("Please Provide a Valid Email!");
+            noMail.showAndWait();
+            forgotPass.fire();
+        }
+        return OTP;
     }
 
 }
