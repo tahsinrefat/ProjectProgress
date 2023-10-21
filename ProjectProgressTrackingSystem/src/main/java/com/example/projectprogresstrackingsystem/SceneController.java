@@ -7,4 +7,7 @@ public class SceneController {
     public void switchToLogSignScene(ActionEvent event, Stage stage){
 
     }
+    public void switchToChangePass(Stage stage){
+
+    }
 }
