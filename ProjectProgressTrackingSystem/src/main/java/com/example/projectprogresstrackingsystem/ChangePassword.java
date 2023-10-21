@@ -80,10 +80,10 @@ public class ChangePassword extends SceneController{
                     int rows = 0;
                     rows = statement.executeUpdate(connectQuery);
                     if (rows!=0){
-                        Alert error = new Alert(Alert.AlertType.INFORMATION);
-                        error.setTitle("Success!");
-                        error.setHeaderText("Password changed successfully!");
-                        error.show();
+                        Alert success = new Alert(Alert.AlertType.INFORMATION);
+                        success.setTitle("Success!");
+                        success.setHeaderText("Password changed successfully!");
+                        success.show();
                     }
                     else{
                         Alert error = new Alert(Alert.AlertType.ERROR);

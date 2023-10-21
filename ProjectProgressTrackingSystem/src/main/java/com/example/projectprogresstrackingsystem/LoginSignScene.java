@@ -175,7 +175,41 @@ public class LoginSignScene extends SceneController{
         signUp.setLayoutX(1125);
         signUp.setLayoutY(520);
         signUp.setStyle("-fx-font-size: 25;-fx-font-weight: bold;");
+        signUp.setOnAction(signUpEvent-> {
+            String signMail = appEmailTextF.getText();
+            String rank = setRankSign.getValue();
+            String connectQuery = "SELECT email FROM "+rank+"_TABLE WHERE password='N/A'";
+            ConnectDB fetch = new ConnectDB();
+            Statement statement;
+            try (Connection con = fetch.connect()) {
+                statement = con.createStatement();
+                ResultSet data = statement.executeQuery(connectQuery);
+                while (data.next()){
+                    SendMail sendMail = new SendMail();
+                    Session newSession = sendMail.setupServerProperties();
+                    String subject = "Signup on Project Progress Tracking System";
+                    int OTP = sendMail.draftEmail(newSession, signMail, subject);
+                    String otp = Integer.toString(OTP);
+                    boolean result = OTPMatch(otp,signUp);
+                    if (result){
+                        System.out.println("Will Change!");
+                        SignupScene signupScene = new SignupScene();
+                        signupScene.switchToSignupScene(stage,rank,signMail);
+                        return;
+                    }else {
+                        System.out.println("Won't Change!");
+                    }
 
+                }
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Error!");
+                error.setHeaderText("Your Email Ain't in Database for Sign Up!");
+                error.show();
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
 
 
         Image logo = new Image("logo.png");

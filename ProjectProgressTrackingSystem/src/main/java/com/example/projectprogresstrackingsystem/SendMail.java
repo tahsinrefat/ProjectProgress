@@ -27,7 +27,7 @@ public class SendMail {
         int min = 100000;
         int max = 999999;
         int OTP = random.nextInt(max - min + 1) + min;
-        String emailBody = "Hello,\nThe OTP for your password reset is: "+OTP+". Please do not share this with anyone in order to protect the privacy of your account and the company as well.\nYours Faithfully,\nProject Progress Tracking System Server";
+        String emailBody = "Hello,\nThe OTP for your desired task is: "+OTP+". Please do not share this with anyone in order to protect the privacy of your account and the company as well.\nYours Faithfully,\nProject Progress Tracking System Server";
         MimeMessage mimeMessage = new MimeMessage(newSession);
         mimeMessage.addRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(mail)});
         mimeMessage.setSubject(subject);

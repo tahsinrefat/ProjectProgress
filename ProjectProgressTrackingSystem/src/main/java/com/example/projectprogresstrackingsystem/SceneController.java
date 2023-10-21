@@ -7,7 +7,10 @@ public class SceneController {
     public void switchToLogSignScene(ActionEvent event, Stage stage){
 
     }
-    public void switchToChangePass(Stage stage){
+    public void switchToChangePass(Stage stage, String mail, String table){
+
+    }
+    public void switchToSignupScene(Stage stage, String rank,String mail){
 
     }
 }

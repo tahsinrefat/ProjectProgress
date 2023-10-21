@@ -55,8 +55,8 @@ public class HelloApplication extends Application {
             try{
                 LoginSignScene toLogin = new LoginSignScene();
                 toLogin.switchToLogSignScene(null, stage);
-//                ChangePassword changePassword = new ChangePassword();
-//                changePassword.switchToChangePass(stage);
+//                SignupScene signupScene = new SignupScene();
+//                signupScene.switchToSignupScene(stage,"","");
             }catch (Exception e){
                 e.printStackTrace();
             }
