@@ -101,7 +101,7 @@ public class LoginSignScene extends SceneController{
 //                        System.out.println(data.getString("email")+" "+data.getString("password"));
                         if (!data.getString("password").equals("N/A")){
                             if (inEmail.equals(data.getString("email")) && inPassword.equals(data.getString("password"))){
-                                System.out.println("Welcome "+data.getString("email")+"!");
+                                System.out.println("Welcome "+data.getString("email")+"!"+" Rank is "+rankSet);
                             }
                             else{
                                 Alert error = new Alert(Alert.AlertType.ERROR);
