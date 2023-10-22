@@ -20,7 +20,6 @@ public class SignupScene extends SceneController{
         Pane root = new Pane();
 
         Font titleFont = new Font("Ramaraja",40);
-        Font anTitleFont = new Font("Ramaraja", 35);
         Font normalFont = new Font(30);
         Font backBtnFont = new Font(20);
 
@@ -89,13 +88,13 @@ public class SignupScene extends SceneController{
             String phone = inPhoneTextF.getText();
             String newPass = newPassTextF.getText();
             String conPass = conPassTextF.getText();
-            if (name!=null && phone!=null && newPass!=null && conPass!=null){
+            if ((name!=null && phone!=null && newPass!=null && conPass!=null) || (!name.isEmpty() && !name.isEmpty() && !newPass.isEmpty() && !conPass.isEmpty())){
                 System.out.println("Printing: "+name+" "+phone+" "+newPass+" "+conPass);
                 if (newPass.equals(conPass)){
                     ConnectDB fetch = new ConnectDB();
                     try (Connection con = fetch.connect()) {
                         Statement statement = con.createStatement();
-                        String connectQuery = "UPDATE "+rank+"_TABLE SET password='"+newPass+"' WHERE email='"+mail+"'";
+                        String connectQuery = "UPDATE "+rank+"_TABLE SET password='"+newPass+"', name='"+name+"', phone='"+phone+"' WHERE email='"+mail+"'";
                         System.out.println(connectQuery);
                         int rows = 0;
                         rows = statement.executeUpdate(connectQuery);

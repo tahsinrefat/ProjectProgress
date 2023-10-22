@@ -13,4 +13,7 @@ public class SceneController {
     public void switchToSignupScene(Stage stage, String rank,String mail){
 
     }
+    public void switchToHRLoginScene(Stage stage, String mail){
+
+    }
 }
