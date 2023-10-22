@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
         Pane root = new Pane();
 
         Text welcome = new Text("Welcome to Project Progress Tracker!");
-        Font font = Font.font("Ramaraja",50);
+        Font font = Font.font("Maharajah",50);
         welcome.layoutXProperty().bind(root.widthProperty().subtract(welcome.getBoundsInLocal().getWidth()).divide(2).subtract(210));
         welcome.layoutYProperty().bind(root.heightProperty().subtract(welcome.getBoundsInLocal().getHeight()).divide(2));
         welcome.setFont(font);
