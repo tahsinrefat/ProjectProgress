@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
         Pane root = new Pane();
 
         Text welcome = new Text("Welcome to Project Progress Tracker!");
-        Font font = Font.font("Ramaraja",50);
+        Font font = Font.font("Maharajah",50);
         welcome.layoutXProperty().bind(root.widthProperty().subtract(welcome.getBoundsInLocal().getWidth()).divide(2).subtract(210));
         welcome.layoutYProperty().bind(root.heightProperty().subtract(welcome.getBoundsInLocal().getHeight()).divide(2));
         welcome.setFont(font);
@@ -27,16 +27,16 @@ public class HelloApplication extends Application {
 
         Image welcome_logo = new Image("logo.png");
         ImageView welcome_logo_view = new ImageView(welcome_logo);
-        welcome_logo_view.setFitHeight(250);
-        welcome_logo_view.setFitWidth(550);
-        welcome_logo_view.setLayoutX(570);
-        welcome_logo_view.setLayoutY(150);
+        welcome_logo_view.setFitHeight(10);
+        welcome_logo_view.setFitWidth(10);
+        welcome_logo_view.setLayoutX(10);
+        welcome_logo_view.setLayoutY(10);
 
         ProgressBar progress = new ProgressBar(-1);
-        progress.setLayoutX(570);
-        progress.setLayoutY(475);
-        progress.setPrefHeight(35);
-        progress.setPrefWidth(500);
+        progress.setLayoutX(10);
+        progress.setLayoutY(10);
+        progress.setPrefHeight(10);
+        progress.setPrefWidth(10);
 
         root.getChildren().add(welcome);
         root.getChildren().add(welcome_logo_view);
@@ -45,8 +45,8 @@ public class HelloApplication extends Application {
         stage.getIcons().add(logo);
         stage.setTitle("Project Progress Tracker");
         stage.setScene(scene);
-        stage.setHeight(900);
-        stage.setWidth(1600);
+        stage.setHeight(10);
+        stage.setWidth(10);
         stage.setResizable(false);
         stage.show();
 
