@@ -1,5 +1,6 @@
 package com.example.projectprogresstrackingsystem;
 
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ public class ChangePassword extends SceneController{
         backBtn.setFont(backBtnFont);
         backBtn.setLayoutX(20);
         backBtn.setLayoutY(20);
+        backBtn.setCursor(Cursor.HAND);
         backBtn.setOnAction(backEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
             backToLogin.switchToLogSignScene(null,stage);
@@ -68,6 +70,7 @@ public class ChangePassword extends SceneController{
         confirmPassBtn.setFont(normalFont);
         confirmPassBtn.setLayoutX(647.5);
         confirmPassBtn.setLayoutY(500);
+        confirmPassBtn.setCursor(Cursor.HAND);
         confirmPassBtn.setOnAction(confirmPassEvent -> {
             String newInPass = inNewPass.getText();
             String conInPass = inConPass.getText();

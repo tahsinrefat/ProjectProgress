@@ -1,5 +1,6 @@
 package com.example.projectprogresstrackingsystem;
 
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -83,12 +84,13 @@ public class SignupScene extends SceneController{
         signUpBtn.setFont(normalFont);
         signUpBtn.setLayoutX(690);
         signUpBtn.setLayoutY(500);
+        signUpBtn.setCursor(Cursor.HAND);
         signUpBtn.setOnAction(signUpEvent ->{
             String name = inNameTextF.getText();
             String phone = inPhoneTextF.getText();
             String newPass = newPassTextF.getText();
             String conPass = conPassTextF.getText();
-            if ((name!=null && phone!=null && newPass!=null && conPass!=null) || (!name.isEmpty() && !name.isEmpty() && !newPass.isEmpty() && !conPass.isEmpty())){
+            if ((name!=null && phone!=null && newPass!=null && conPass!=null) || (!name.isEmpty() && !phone.isEmpty() && !newPass.isEmpty() && !conPass.isEmpty())){
                 System.out.println("Printing: "+name+" "+phone+" "+newPass+" "+conPass);
                 if (newPass.equals(conPass)){
                     ConnectDB fetch = new ConnectDB();
