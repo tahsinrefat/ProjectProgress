@@ -53,8 +53,10 @@ public class HelloApplication extends Application {
         PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(event -> {
             try{
-                LoginSignScene toLogin = new LoginSignScene();
-                toLogin.switchToLogSignScene(null, stage);
+//                LoginSignScene toLogin = new LoginSignScene();
+//                toLogin.switchToLogSignScene(null, stage);
+                HRLoginScene hrLoginScene = new HRLoginScene();
+                hrLoginScene.switchToHRLoginScene(stage, "tahsin92refat@gmail.com","","","");
             }catch (Exception e){
                 e.printStackTrace();
             }

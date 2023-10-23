@@ -1,6 +1,7 @@
 package com.example.projectprogresstrackingsystem;
 
 import javafx.event.ActionEvent;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -74,11 +75,13 @@ public class LoginSignScene extends SceneController{
         setRank.setLayoutX(370);
         setRank.setLayoutY(530);
         setRank.setStyle("-fx-font-size: 15 px;-fx-font-weight: bold;");
+        setRank.setCursor(Cursor.HAND);
 
         Button login = new Button("Login");
         login.setLayoutX(250);
         login.setLayoutY(570);
         login.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
+        login.setCursor(Cursor.HAND);
         login.setOnAction(loginEvent -> {
             String inEmail = emailField.getText();
             String inPassword = passwordField.getText();
@@ -90,9 +93,9 @@ public class LoginSignScene extends SceneController{
                 error.show();
             }
             else{
-//                System.out.println(inEmail+" "+ inPassword+ " "+ rankSet);
+                System.out.println(inEmail+" "+ inPassword+ " "+ rankSet);
                 String connectQuery = "SELECT * FROM "+rankSet+"_TABLE";
-//                System.out.println(connectQuery);
+                System.out.println(connectQuery);
                 ConnectDB fetch = new ConnectDB();
                 try (Connection con = fetch.connect()) {
                     Statement statement = con.createStatement();
@@ -103,7 +106,8 @@ public class LoginSignScene extends SceneController{
                             if (inEmail.equals(data.getString("email")) && inPassword.equals(data.getString("password"))){
                                 System.out.println("Welcome "+data.getString("email")+"!"+" Rank is "+rankSet);
                             }
-                            else{
+                            else if (!(inEmail.equals(data.getString("email"))) && !(inPassword.equals(data.getString("password")))){
+                                System.out.println("its me");
                                 Alert error = new Alert(Alert.AlertType.ERROR);
                                 error.setTitle("Error!");
                                 error.setHeaderText("Wrong Credentials Provided!");
@@ -121,6 +125,7 @@ public class LoginSignScene extends SceneController{
         forgotPass.setLayoutX(350);
         forgotPass.setLayoutY(570);
         forgotPass.setStyle("-fx-font-size: 20;-fx-font-weight: bold;");
+        forgotPass.setCursor(Cursor.HAND);
         forgotPass.setOnAction((forgotPassEvent) -> {
             final ArrayList<String> OTP = forForgotPass(forgotPass);
             if (OTP != null) {
@@ -170,11 +175,13 @@ public class LoginSignScene extends SceneController{
         setRankSign.setLayoutX(1175);
         setRankSign.setLayoutY(480);
         setRankSign.setStyle("-fx-font-size: 15 px;-fx-font-weight: bold;");
+        setRankSign.setCursor(Cursor.HAND);
 
         Button signUp = new Button("Sign Up");
         signUp.setLayoutX(1125);
         signUp.setLayoutY(520);
         signUp.setStyle("-fx-font-size: 25;-fx-font-weight: bold;");
+        signUp.setCursor(Cursor.HAND);
         signUp.setOnAction(signUpEvent-> {
             String signMail = appEmailTextF.getText();
             String rank = setRankSign.getValue();
