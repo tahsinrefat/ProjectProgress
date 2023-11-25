@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 
 public class ConnectDB {
     Connection con;
-    String databaseName = "sql12653916";
-    String databaseUser = "sql12653916";
-    String databasePass = "hi1zCVC4Ec";
+    String databaseName = "sql12662458";
+    String databaseUser = "sql12662458";
+    String databasePass = "RU2m8qnffz";
     String url = "jdbc:mysql://sql12.freesqldatabase.com:3306/"+databaseName;
     public Connection connect(){
         try{
