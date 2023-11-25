@@ -95,7 +95,7 @@ public class LoginSignScene extends SceneController{
             else{
                 System.out.println(inEmail+" "+ inPassword+ " "+ rankSet);
                 String connectQuery = "SELECT * FROM "+rankSet+"_TABLE";
-                System.out.println(connectQuery);
+//                System.out.println(connectQuery);
                 ConnectDB fetch = new ConnectDB();
                 try (Connection con = fetch.connect()) {
                     Statement statement = con.createStatement();
@@ -104,17 +104,43 @@ public class LoginSignScene extends SceneController{
 //                        System.out.println(data.getString("email")+" "+data.getString("password"));
                         if (!data.getString("password").equals("N/A")){
                             if (inEmail.equals(data.getString("email")) && inPassword.equals(data.getString("password"))){
-                                System.out.println("Welcome "+data.getString("email")+"!"+" Rank is "+rankSet);
-                            }
-                            else if (!(inEmail.equals(data.getString("email"))) && !(inPassword.equals(data.getString("password")))){
-                                System.out.println("its me");
-                                Alert error = new Alert(Alert.AlertType.ERROR);
-                                error.setTitle("Error!");
-                                error.setHeaderText("Wrong Credentials Provided!");
-                                error.show();
+//                                System.out.println("Welcome "+data.getString("email")+"!"+" Rank is "+rankSet);
+                                if (rankSet.equals("HR")){
+                                    new HRLoginScene().switchToHRLoginScene(stage,data.getString("email"),data.getString("name"),data.getString("phone"),rankSet);
+                                    return;
+                                } else if (rankSet.equals("Teamlead")) {
+                                    new TeamleadLoginScene().switchToTeamleadLoginScene(stage,data.getString("email"),data.getString("name"),data.getString("phone"),rankSet,data.getString("project"));
+                                    return;
+                                } else if (rankSet.equals("Developer") || rankSet.equals("SQA")) {
+                                    String feature="";
+                                    String dev_msg="";
+                                    String sqa_msg="";
+                                    String status="";
+                                    String featureQuery = "";
+                                    if (rankSet.equals("Developer")){
+                                        featureQuery = "SELECT feature,Dev_comment,Sqa_comment,status FROM Project_TABLE WHERE dev_mail='"+data.getString("email")+"'";
+                                    }
+                                    else{
+                                        featureQuery = "SELECT feature,Dev_comment,Sqa_comment,status FROM Project_TABLE WHERE sqa_mail='"+data.getString("email")+"'";
+                                    }
+                                    Statement featureStatement = con.createStatement();
+                                    ResultSet featureData = featureStatement.executeQuery(featureQuery);
+                                    while (featureData.next()){
+                                        feature = featureData.getString("feature");
+                                        dev_msg = featureData.getString("Dev_comment");
+                                        sqa_msg = featureData.getString("Sqa_comment");
+                                        status = featureData.getString("status");
+                                    }
+                                    new DevSqaLoginScene().switchToDevSqaLoginScene(stage,data.getString("email"),data.getString("name"),data.getString("phone"),rankSet,data.getString("project"),feature,dev_msg,sqa_msg,status);
+                                    return;
+                                }
                             }
                         }
                     }
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Error!");
+                    error.setHeaderText("Wrong Credentials Provided!");
+                    error.show();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -170,7 +196,7 @@ public class LoginSignScene extends SceneController{
         rankTextSign.setLayoutY(500);
 
         ComboBox<String> setRankSign = new ComboBox<>();
-        setRankSign.getItems().addAll("--Select a Rank--","HR", "Developer", "SQA");
+        setRankSign.getItems().addAll("--Select a Rank--","HR", "Teamlead", "Developer", "SQA");
         setRankSign.setValue("--Select a Rank--");
         setRankSign.setLayoutX(1175);
         setRankSign.setLayoutY(480);

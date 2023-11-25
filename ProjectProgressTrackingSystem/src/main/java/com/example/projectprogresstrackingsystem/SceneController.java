@@ -13,7 +13,16 @@ public class SceneController {
     public void switchToSignupScene(Stage stage, String rank,String mail){
 
     }
-    public void switchToHRLoginScene(Stage stage, String mail){
+    public void switchToHRLoginScene(Stage stage, String mail, String name, String phone, String rank){
+
+    }
+    public void switchToHRProjectDetails(Stage stage, String mail, String name, String phone, String rank){
+
+    }
+    public void switchToTeamleadLoginScene(Stage stage, String mail, String name, String phone, String rank, String project){
+
+    }
+    public void switchToDevSqaLoginScene(Stage stage, String mail, String name, String phone, String rank, String project, String feature, String devMsg, String sqaMsg, String status){
 
     }
 }
