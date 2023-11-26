@@ -158,10 +158,10 @@ public class DevSqaLoginScene extends SceneController{
 
         boolean addComment = false;
         String txtForTitle = "";
-        if (!dev){
+        if (!dev && project!=null){
             txtForTitle = "Message from Developer:";
         }
-        else{
+        else if (dev && project!=null){
             txtForTitle = "Message from SQA:";
         }
         Text msgFromSQAOrDevTxt = new Text(txtForTitle);
@@ -169,7 +169,7 @@ public class DevSqaLoginScene extends SceneController{
         msgFromSQAOrDevTxt.setLayoutX(960);
         msgFromSQAOrDevTxt.setLayoutY(298);
         String msg = "";
-        if (dev){
+        if (dev && project!=null){
             if (sqaMsg!=null){
                 if (!sqaMsg.isEmpty()) {
                     addComment = true;
@@ -177,7 +177,7 @@ public class DevSqaLoginScene extends SceneController{
                 }
             }
         }
-        else {
+        else if (!dev && project!=null){
             if (devMsg!=null){
                 if (!devMsg.isEmpty()){
                     addComment = true;
@@ -193,15 +193,15 @@ public class DevSqaLoginScene extends SceneController{
         msgFromSQAOrDev.setWrappingWidth(600);
 
         root.getChildren().addAll(logOutBtn,detailText,nameText,rankText,mailText,phoneText,refreshBtn,projectAndFeatureTxt);
-        if (addCommentArea){
+        if (addCommentArea && project!=null){
             root.getChildren().addAll(commentArea,postCommentBtn);
         }
-        if (addComment){
+        if (addComment && project!=null){
             commentArea.setLayoutX(100);
             postCommentBtn.setLayoutX(430);
             root.getChildren().addAll(msgFromSQAOrDevTxt,msgFromSQAOrDev);
         }
-        if (!dev){
+        if (!dev && project!=null){
             root.getChildren().addAll(objectionBtn);
         }
 

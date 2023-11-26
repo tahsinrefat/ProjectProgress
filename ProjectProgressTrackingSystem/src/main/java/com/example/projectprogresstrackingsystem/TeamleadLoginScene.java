@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -73,17 +74,49 @@ public class TeamleadLoginScene extends SceneController{
             new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail, name, phone, rank, project);
         });
 
+        Button completeProjectBtn = new Button("Mark Project As Complete");
+        completeProjectBtn.setFont(normalFont);
+        completeProjectBtn.setStyle("-fx-background-color: red;-fx-text-fill: white;");
+        completeProjectBtn.setLayoutX(1180);
+        completeProjectBtn.setLayoutY(175);
+        completeProjectBtn.setCursor(Cursor.HAND);
+
+        Pair<Integer,Integer>pair = new Pair<>(-1,-1);
         String forProjectName = null;
         if (project==null){
             forProjectName = "Sorry, no projects assigned yet.";
         }
         else {
-            forProjectName = "Current Project Name: "+project;
+            pair = completedFeatures(mail,project);
+            forProjectName = "Current Project Name: "+project+"("+pair.getValue()+"/"+pair.getKey()+")";
         }
         Text curProjectNameText = new Text(forProjectName);
         curProjectNameText.setFont(anTitleFont);
         curProjectNameText.setLayoutX(20);
         curProjectNameText.setLayoutY(245);
+
+        final int feature = pair.getKey();
+        final int completedFeature = pair.getValue();
+        completeProjectBtn.setOnAction( completeProjectBtnEvent-> {
+            Alert confirmLast = new Alert(Alert.AlertType.CONFIRMATION);
+            String alertHead = "Do you want to mark this project as complete?";
+            confirmLast.setTitle("Confirm");
+            confirmLast.setHeaderText(alertHead);
+            confirmLast.showAndWait().ifPresent( result->{
+                if (result== ButtonType.OK){
+                    if (feature==completedFeature){
+                        completeCurrentProject(mail,project);
+                        new TeamleadLoginScene().switchToHRLoginScene(stage,mail,name,phone,rank);
+                    }
+                    else {
+                        Alert failure = new Alert(Alert.AlertType.ERROR);
+                        failure.setTitle("Failed!");
+                        failure.setHeaderText("Some features still needs to be completed first!");
+                        failure.show();
+                    }
+                }
+            } );
+        });
 
         Text info = new Text("Please click on the features below to edit or assign people.");
         info.setFont(anTitleFont);
@@ -241,7 +274,7 @@ public class TeamleadLoginScene extends SceneController{
         curProjectTable.setLayoutX(20);
         curProjectTable.setLayoutY(300);
 
-        String projectDetailsFetchQuery = "SELECT * FROM Project_TABLE WHERE lead_mail='"+mail+"'";
+        String projectDetailsFetchQuery = "SELECT * FROM Project_TABLE WHERE lead_mail='"+mail+"' AND name='"+project+"'";
         if (project!=null){
             ConnectDB fetch = new ConnectDB();
             try (Connection con = fetch.connect()) {
@@ -330,10 +363,24 @@ public class TeamleadLoginScene extends SceneController{
         comProjectTable.setLayoutX(1220);
         comProjectTable.setLayoutY(300);
 
+        String fetchCompleteProjectsQuery = "SELECT * FROM Project_Record_TABLE WHERE lead='"+mail+"'";
+        ConnectDB fetch = new ConnectDB();
+        try (Connection con = fetch.connect()) {
+            Statement fetchCompleteProjectsStatement = con.createStatement();
+            ObservableList<ComProjects> curData = FXCollections.observableArrayList();
+            ResultSet completeProjectData = fetchCompleteProjectsStatement.executeQuery(fetchCompleteProjectsQuery);
+            while (completeProjectData.next()){
+                ComProjects temp = new ComProjects(completeProjectData.getString("name"));
+                curData.add(temp);
+            }
+            comProjectTable.setItems(curData);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         Image logo = new Image("logo.png");
 
-        root.getChildren().addAll(logOutBtn, detailText, nameText, rankText, mailText, phoneText,refreshBtn, curProjectNameText, info, curProjectTable, addFeatureBtn, completedProjectsText, comProjectTable);
+        root.getChildren().addAll(logOutBtn, detailText, nameText, rankText, mailText, phoneText,refreshBtn, curProjectNameText, info, curProjectTable, addFeatureBtn, completedProjectsText, comProjectTable,completeProjectBtn);
 
         Scene scene = new Scene(root);
 
@@ -417,5 +464,63 @@ public class TeamleadLoginScene extends SceneController{
         public String getComProjectNames() {return comProjectNames.get(); }
         public void setComProjectNames(String comProjectNames) { this.comProjectNames.set(comProjectNames); }
         public StringProperty comProjectNamesProperty() { return comProjectNames; }
+    }
+    public Pair<Integer, Integer> completedFeatures(String lead_mail, String project){
+        ConnectDB fetch = new ConnectDB();
+        Pair<Integer, Integer> pair = new Pair<>(-1,-1);
+        try (Connection con = fetch.connect()) {
+            String findOutQuery = "SELECT * FROM Project_TABLE WHERE lead_mail='"+lead_mail+"' AND name='"+project+"'";
+            Statement findOutStatement = con.createStatement();
+            ResultSet findOutData = findOutStatement.executeQuery(findOutQuery);
+            int feature=0, completed_feature=0;
+            while (findOutData.next()){
+                feature++;
+                if (findOutData.getString("status").equals("complete")){
+                    completed_feature++;
+                }
+            }
+            pair = new Pair<>(feature,completed_feature);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return pair;
+    }
+    public void completeCurrentProject(String mail, String project){
+        String teamLeadReleaseQuery = "UPDATE Teamlead_TABLE SET project=NULL WHERE email='"+mail+"'";
+        String completedProjectRecordQuery = "INSERT INTO Project_Record_TABLE(name,lead) VALUES ('"+project+"','"+mail+"')";
+        ConnectDB fetch = new ConnectDB();
+        try (Connection con = fetch.connect()) {
+            Statement completedProjectRecordStatement = con.createStatement();
+            int rowsCompletedProjectRecord = 0;
+            rowsCompletedProjectRecord = completedProjectRecordStatement.executeUpdate(completedProjectRecordQuery);
+            if (rowsCompletedProjectRecord>0){
+                Statement teamLeadReleaseStatement = con.createStatement();
+                int rowsTeamLeadRelease = 0;
+                rowsTeamLeadRelease = teamLeadReleaseStatement.executeUpdate(teamLeadReleaseQuery);
+                if (rowsTeamLeadRelease>0){
+                    Alert success = new Alert(Alert.AlertType.INFORMATION);
+                    success.setTitle("Success!");
+                    success.setHeaderText("Projection Completion Was A Success!");
+                    success.show();
+                }
+                else {
+                    System.out.println("Completed Table");
+                    Alert failure = new Alert(Alert.AlertType.ERROR);
+                    failure.setTitle("Failed!");
+                    failure.setHeaderText("Project Completion Failed Please Try Again!");
+                    failure.show();
+                }
+
+            }
+            else {
+                System.out.println("Teamlead Release");
+                Alert failure = new Alert(Alert.AlertType.ERROR);
+                failure.setTitle("Failed!");
+                failure.setHeaderText("Project Completion Failed Please Try Again!");
+                failure.show();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -67,7 +67,7 @@ public class miniHRAddNewProject {
                 error.showAndWait();
             }
             else {
-                String queryLeadTable = "UPDATE Teamlead_TABLE SET project = '"+projectName+"', completion='0' WHERE email = '"+lead_mail+"'";
+                String queryLeadTable = "UPDATE Teamlead_TABLE SET project = '"+projectName+"' WHERE email = '"+lead_mail+"'";
                 ConnectDB fetch = new ConnectDB();
                 try (Connection con = fetch.connect()) {
                     Statement statement = con.createStatement();
