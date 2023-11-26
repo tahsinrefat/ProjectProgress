@@ -57,6 +57,7 @@ public class HelloApplication extends Application {
 //                new DevSqaLoginScene().switchToDevSqaLoginScene(stage,"sdhsud","sbda","08866","SQA","ajshhbdh","djsabd", "sjddhjsbd","askud","");
 //                new miniObjection().switchToMiniObjection(new Stage(),stage,"","");
 //                new miniLeadEditOrComplete().switchToMiniLeadEditOrComplete(new Stage(),stage,"","","","","","","Submitted");
+//                new HRLoginScene().switchToHRLoginScene(stage,"","","","");
             }catch (Exception e){
                 e.printStackTrace();
             }

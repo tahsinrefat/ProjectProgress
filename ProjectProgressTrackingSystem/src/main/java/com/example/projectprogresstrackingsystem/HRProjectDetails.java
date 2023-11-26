@@ -73,83 +73,11 @@ public class HRProjectDetails extends SceneController{
         phoneText.setLayoutX(20);
         phoneText.setLayoutY(250);
 
-        String tableColumnStyle = "-fx-font-size: 25px; -fx-font-family: 'Ramaraja';";
-        TableView<HRLoginScene.Projects> table = new TableView<>();
-        table.getSelectionModel().setCellSelectionEnabled(true);
-        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        table.setStyle("-fx-background-color: #1777e6;");
-        table.setOnMouseClicked(event -> {
-            ObservableList<TablePosition> selectedCells = table.getSelectionModel().getSelectedCells();
-            int row = -1;
-            int col = -1;
-            for (TablePosition tablePosition : selectedCells) {
-                row = tablePosition.getRow();
-                col = tablePosition.getColumn();
-                String value = table.getColumns().get(col).getCellData(row).toString();
-                System.out.println("Selected Cell Value: " + value);
-                System.out.println(row + " " + col);
-            }
-
-
-        });
-        TableColumn<HRLoginScene.Projects, String> feature = new TableColumn<>("Features");
-        feature.setPrefWidth(600);
-        feature.setStyle(tableColumnStyle);
-        feature.setCellValueFactory(cellData -> cellData.getValue().projectNameProperty());
-        feature.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item);
-                    int row = getIndex();
-                    setFont(smallerTitleFont);
-                }
-            }
-        });
-        TableColumn<HRLoginScene.Projects, String> completion = new TableColumn<>("Completed");
-        completion.setPrefWidth(250);
-        completion.setStyle(tableColumnStyle);
-        completion.setCellValueFactory(cellData -> cellData.getValue().completionProperty());
-        completion.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item);
-                    setFont(smallerTitleFont);
-                }
-            }
-        });
-        table.getColumns().addAll(feature, completion);
-        ConnectDB fetch = new ConnectDB();
-        Statement statement;
-        String connectQuery = "SELECT Feature FROM Project_TABLE WHERE name='"+project_name+"'";
-        try (Connection con = fetch.connect()) {
-            statement = con.createStatement();
-            ResultSet rData = statement.executeQuery(connectQuery);
-            ObservableList<HRLoginScene.Projects> data = FXCollections.observableArrayList();
-            while (rData.next()){
-                //HRLoginScene.Projects temp = new HRLoginScene.Projects(rData.getString("feature"),"YES");
-                //data.add(temp);
-            }
-            table.setItems(data);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        feature.setStyle("-fx-alignment: CENTER;");
-        completion.setStyle("-fx-alignment: CENTER;");
-        table.setLayoutX(380);
-        table.setLayoutY(300);
 
 
         Image logo = new Image("logo.png");
 
-        root.getChildren().addAll(logOutBtn, detailText, nameText, rankText, mailText, phoneText, backBtn, table);
+        root.getChildren().addAll(logOutBtn, detailText, nameText, rankText, mailText, phoneText, backBtn);
 
         Scene scene = new Scene(root);
 
