@@ -110,14 +110,17 @@ public class TeamleadLoginScene extends SceneController{
             int row = -1;
             int col = -1;
             String value = "";
+            String status = "";
             for (TablePosition tablePosition : selectedCells) {
                 row = tablePosition.getRow();
                 col = tablePosition.getColumn();
-                value = curProjectTable.getColumns().get(col).getCellData(row).toString();
+                value = curProjectTable.getColumns().get(0).getCellData(row).toString();
+                status = curProjectTable.getColumns().get(5).getCellData(row).toString();
                 System.out.println("Selected Cell Value: " + value);
                 System.out.println(row + " " + col);
             }
             System.out.println(value);
+            new miniLeadEditOrComplete().switchToMiniLeadEditOrComplete(new Stage(),stage,mail,name,phone,rank,project,value,status);
 //            new HRProjectDetails().switchToProjectDetailsScene(stage, mail, name, phone, rank, value);
         });
 
@@ -229,6 +232,7 @@ public class TeamleadLoginScene extends SceneController{
             }
         });
         curProjectTable.getColumns().addAll(featureName, sqaName, sqaMsg, devName, devMsg, leadMsg);
+        featureName.setStyle("-fx-alignment: CENTER;");
         sqaName.setStyle("-fx-alignment: CENTER;");
         devName.setStyle("-fx-alignment: CENTER;");
         sqaMsg.setStyle("-fx-alignment: CENTER;");
@@ -264,8 +268,11 @@ public class TeamleadLoginScene extends SceneController{
                     } else if (projectTableData.getString("status").equals("sqa")) {
                         status = "Under Testing";
                     }
-                    else {
+                    else if (projectTableData.getString("status").equals("teamlead")){
                         status = "Submitted to Teamlead";
+                    }
+                    else {
+                        status = "Completed";
                     }
                     CurrentProjects temp = new CurrentProjects(projectTableData.getString("feature"),sqaNameForTable,devNameForTable,projectTableData.getString("Sqa_comment"),projectTableData.getString("Dev_comment"),status);
                     curData.add(temp);
