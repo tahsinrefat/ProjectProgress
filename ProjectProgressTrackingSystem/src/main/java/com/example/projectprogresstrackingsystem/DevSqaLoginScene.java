@@ -34,7 +34,11 @@ public class DevSqaLoginScene extends SceneController{
         logOutBtn.setCursor(Cursor.HAND);
         logOutBtn.setOnAction(logOutEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
-            backToLogin.switchToLogSignScene(null, stage);
+            try {
+                backToLogin.switchToLogSignScene(null, stage);
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Text detailText = new Text("Ongoing Current Projects");
@@ -279,10 +283,11 @@ public class DevSqaLoginScene extends SceneController{
                 }
             }
             else {
-                Alert failure = new Alert(Alert.AlertType.ERROR);
-                failure.setTitle("Failed!");
-                failure.setHeaderText("Progress Record Failed Please Try Again!");
-                failure.show();
+//                Alert failure = new Alert(Alert.AlertType.ERROR);
+//                failure.setTitle("Failed!");
+//                failure.setHeaderText("Progress Record Failed Please Try Again!");
+//                failure.show();
+                throw new CustomException("proRecordFailed");
             }
         } catch (Exception e){
             e.printStackTrace();

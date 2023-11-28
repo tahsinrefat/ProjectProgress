@@ -48,7 +48,6 @@ public class miniHRAddNewProject {
         addProjectBtn.setFont(normalFont);
         addProjectBtn.setLayoutX(235);
         addProjectBtn.setLayoutY(210);
-
         addProjectBtn.setOnAction(addProjectEvent -> {
             String projectName = pNameTextField.getText();
             String lead = setLead.getValue();
@@ -61,10 +60,15 @@ public class miniHRAddNewProject {
             }
 
             if (lead.equals("--Select a Lead--") || projectName.isEmpty()){
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Please don't leave any field blank and select a valid lead!");
-                error.showAndWait();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Please don't leave any field blank and select a valid lead!");
+//                error.showAndWait();
+                try {
+                    throw new CustomException("invalidInput");
+                } catch (CustomException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else {
                 String queryLeadTable = "UPDATE Teamlead_TABLE SET project = '"+projectName+"' WHERE email = '"+lead_mail+"'";
@@ -79,13 +83,19 @@ public class miniHRAddNewProject {
                         success.show();
                     }
                     else {
-                        Alert success = new Alert(Alert.AlertType.ERROR);
-                        success.setTitle("Error!");
-                        success.setHeaderText("Failed to add project!");
-                        success.show();
+//                        Alert success = new Alert(Alert.AlertType.ERROR);
+//                        success.setTitle("Error!");
+//                        success.setHeaderText("Failed to add project!");
+//                        success.show();
+                        throw new CustomException("addProjectFail");
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    try {
+                        throw new CustomException("db_connect");
+                    } catch (CustomException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 mini_hr_add_project_stage.close();
                 new HRLoginScene().switchToHRLoginScene(stage, mail, name, phone, rank);

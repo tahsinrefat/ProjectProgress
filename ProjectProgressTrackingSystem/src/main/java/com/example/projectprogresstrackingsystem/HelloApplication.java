@@ -58,6 +58,7 @@ public class HelloApplication extends Application {
 //                new miniObjection().switchToMiniObjection(new Stage(),stage,"","");
 //                new miniLeadEditOrComplete().switchToMiniLeadEditOrComplete(new Stage(),stage,"","","","","","","Submitted");
 //                new HRLoginScene().switchToHRLoginScene(stage,"","","","");
+//                new HRProjectDetails().switchToHRProjectDetails(stage,"","","","","");
             }catch (Exception e){
                 e.printStackTrace();
             }

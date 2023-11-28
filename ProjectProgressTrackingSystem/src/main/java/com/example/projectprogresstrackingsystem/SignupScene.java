@@ -30,7 +30,11 @@ public class SignupScene extends SceneController{
         backBtn.setLayoutY(20);
         backBtn.setOnAction(backEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
-            backToLogin.switchToLogSignScene(null,stage);
+            try {
+                backToLogin.switchToLogSignScene(null,stage);
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Image welcome_logo = new Image("logo.png");
