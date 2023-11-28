@@ -65,7 +65,12 @@ public class miniLeadEditOrComplete {
                 currentDevsName = currentDevsNameData.getString("name");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         for (Map.Entry<String,String>entry : freeDevsMap.entrySet()) {
             freeDevs.getItems().add(entry.getValue());
@@ -105,7 +110,12 @@ public class miniLeadEditOrComplete {
                 currentSqaName = currentSqaNameData.getString("name");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         for (Map.Entry<String,String>entry : freeSqaMap.entrySet()) {
             freeSQA.getItems().add(entry.getValue());
@@ -135,7 +145,11 @@ public class miniLeadEditOrComplete {
                 if (result== ButtonType.OK){
                     changeDevOrSQA(newDev,newSqa,currentDevNameForLambda,currentDevMailForLambda,currentSqaNameForLambda,currentSqaMailForLambda,freeDevsMap,freeSqaMap,status,project,selectedFeature);
                     miniLeadEditOrComoleteStage.close();
-                    new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                    try {
+                        new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                    } catch (CustomException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } );
         });
@@ -150,18 +164,32 @@ public class miniLeadEditOrComplete {
                     if (status.equals("Submitted to Teamlead")){
                         completeFeature(mail,currentDevMailForLambda,currentSqaMailForLambda,project,selectedFeature);
                         miniLeadEditOrComoleteStage.close();
-                        new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                        try {
+                            new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else if (status.equals("Under Development")) {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Not Developed Yet!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Not Developed Yet!");
+//                        error.show();
+                        try {
+                            throw new CustomException("notDeved");
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     else if (status.equals("Under Testing")){
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Not Tested Yet!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Not Tested Yet!");
+//                        error.show();
+                        try {
+                            throw new CustomException("notTested");
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             } );
@@ -199,10 +227,15 @@ public class miniLeadEditOrComplete {
         reassignToDevBtn.setOnAction( reassignToDevBtnEvent-> {
             String leadComment = commentArea.getText();
             if (leadComment==null || leadComment.isEmpty()){
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Please Provide a valid comment!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Please Provide a valid comment!");
+//                error.show();
+                try {
+                    throw new CustomException("invalidComment");
+                } catch (CustomException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else {
                 Alert confirmLast = new Alert(Alert.AlertType.CONFIRMATION);
@@ -213,7 +246,11 @@ public class miniLeadEditOrComplete {
                     if (result== ButtonType.OK){
                         reAssignToDev(leadComment,mail,project,selectedFeature);;
                         miniLeadEditOrComoleteStage.close();
-                        new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                        try {
+                            new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 } );
             }
@@ -249,10 +286,15 @@ public class miniLeadEditOrComplete {
             }
         }
         if (newDev.equals(currentDevNameForLambda) && newSqa.equals(currentSqaNameForLambda)){
-            Alert error = new Alert(Alert.AlertType.ERROR);
-            error.setTitle("Error!");
-            error.setHeaderText("Please Change Developer or SQA First To Reassign!");
-            error.show();
+//            Alert error = new Alert(Alert.AlertType.ERROR);
+//            error.setTitle("Error!");
+//            error.setHeaderText("Please Change Developer or SQA First To Reassign!");
+//            error.show();
+            try {
+                throw new CustomException("noDevSqaChange");
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         } else if (!newDev.equals(currentDevNameForLambda) && !newSqa.equals(currentSqaNameForLambda) && !status.equals("Completed")) {
             clearDevTable = "UPDATE Developer_TABLE SET project=NULL,feature=NULL WHERE email='"+currentDevMailForLambda+"'";
             setDevTable = "UPDATE Developer_TABLE SET project='"+project+"', feature='"+feature+"' WHERE email='"+newDevMail+"'";
@@ -285,42 +327,52 @@ public class miniLeadEditOrComplete {
                                     success.setHeaderText("Reassigning Completed!");
                                     success.show();
                                 }else {
-                                    Alert error = new Alert(Alert.AlertType.ERROR);
-                                    error.setTitle("Error!");
-                                    error.setHeaderText("Reassigning Failed!");
-                                    error.show();
+//                                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                                    error.setTitle("Error!");
+//                                    error.setHeaderText("Reassigning Failed!");
+//                                    error.show();
+                                    throw new CustomException("reassignFail");
                                 }
                             }
                             else {
-                                Alert error = new Alert(Alert.AlertType.ERROR);
-                                error.setTitle("Error!");
-                                error.setHeaderText("Reassigning Failed!");
-                                error.show();
+//                                Alert error = new Alert(Alert.AlertType.ERROR);
+//                                error.setTitle("Error!");
+//                                error.setHeaderText("Reassigning Failed!");
+//                                error.show();
+                                throw new CustomException("reassignFail");
                             }
                         }
                         else {
-                            Alert error = new Alert(Alert.AlertType.ERROR);
-                            error.setTitle("Error!");
-                            error.setHeaderText("Reassigning Failed!");
-                            error.show();
+//                            Alert error = new Alert(Alert.AlertType.ERROR);
+//                            error.setTitle("Error!");
+//                            error.setHeaderText("Reassigning Failed!");
+//                            error.show();
+                            throw new CustomException("reassignFail");
                         }
                     }
                     else {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Reassigning Failed!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Reassigning Failed!");
+//                        error.show();
+                        throw new CustomException("reassignFail");
                     }
                 }
                 else {
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error!");
-                    error.setHeaderText("Reassigning Failed!");
-                    error.show();
+//                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                    error.setTitle("Error!");
+//                    error.setHeaderText("Reassigning Failed!");
+//                    error.show();
+                    throw new CustomException("reassignFail");
                 }
 
             } catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                try {
+                    throw new CustomException("db_connect");
+                } catch (CustomException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         } else if (!newDev.equals(currentDevNameForLambda) && !status.equals("Completed")) {
             clearDevTable = "UPDATE Developer_TABLE SET project=NULL,feature=NULL WHERE email='"+currentDevMailForLambda+"'";
@@ -345,27 +397,35 @@ public class miniLeadEditOrComplete {
                             success.show();
                         }
                         else {
-                            Alert error = new Alert(Alert.AlertType.ERROR);
-                            error.setTitle("Error!");
-                            error.setHeaderText("Reassigning Failed!");
-                            error.show();
+//                            Alert error = new Alert(Alert.AlertType.ERROR);
+//                            error.setTitle("Error!");
+//                            error.setHeaderText("Reassigning Failed!");
+//                            error.show();
+                            throw new CustomException("reassignFail");
                         }
                     }
                     else {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Reassigning Failed!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Reassigning Failed!");
+//                        error.show();
+                        throw new CustomException("reassignFail");
                     }
                 }
                 else {
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error!");
-                    error.setHeaderText("Reassigning Failed!");
-                    error.show();
+//                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                    error.setTitle("Error!");
+//                    error.setHeaderText("Reassigning Failed!");
+//                    error.show();
+                    throw new CustomException("reassignFail");
                 }
             } catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                try {
+                    throw new CustomException("db_connect");
+                } catch (CustomException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         } else if (!newSqa.equals(currentSqaNameForLambda) && !status.equals("Completed")) {
             clearSqaTable = "UPDATE SQA_TABLE SET project=NULL,feature=NULL WHERE email='"+currentSqaMailForLambda+"'";
@@ -389,27 +449,35 @@ public class miniLeadEditOrComplete {
                             success.setHeaderText("Reassigning Completed!");
                             success.show();
                         }else {
-                            Alert error = new Alert(Alert.AlertType.ERROR);
-                            error.setTitle("Error!");
-                            error.setHeaderText("Reassigning Failed!");
-                            error.show();
+//                            Alert error = new Alert(Alert.AlertType.ERROR);
+//                            error.setTitle("Error!");
+//                            error.setHeaderText("Reassigning Failed!");
+//                            error.show();
+                            throw new CustomException("reassignFail");
                         }
                     }
                     else {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Reassigning Failed!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Reassigning Failed!");
+//                        error.show();
+                        throw new CustomException("reassignFail");
                     }
                 }
                 else {
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error!");
-                    error.setHeaderText("Reassigning Failed!");
-                    error.show();
+//                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                    error.setTitle("Error!");
+//                    error.setHeaderText("Reassigning Failed!");
+//                    error.show();
+                    throw new CustomException("reassignFail");
                 }
             } catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                try {
+                    throw new CustomException("db_connect");
+                } catch (CustomException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
     }
@@ -427,13 +495,19 @@ public class miniLeadEditOrComplete {
                 success.show();
             }
             else {
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Reassigning To Developer Failed!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Reassigning To Developer Failed!");
+//                error.show();
+                throw new CustomException("reassignFail");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
     public void completeFeature(String leadMail,String currentDevMail, String currentSqaMail, String project, String feature){
@@ -460,27 +534,35 @@ public class miniLeadEditOrComplete {
                         success.show();
                     }
                     else {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Feature Completion Failed!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Feature Completion Failed!");
+//                        error.show();
+                        throw new CustomException("proFeatureFail");
                     }
                 }
                 else {
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error!");
-                    error.setHeaderText("Feature Completion Failed!");
-                    error.show();
+//                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                    error.setTitle("Error!");
+//                    error.setHeaderText("Feature Completion Failed!");
+//                    error.show();
+                    throw new CustomException("proFeatureFail");
                 }
             }
             else {
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Feature Completion Failed!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Feature Completion Failed!");
+//                error.show();
+                throw new CustomException("proFeatureFail");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

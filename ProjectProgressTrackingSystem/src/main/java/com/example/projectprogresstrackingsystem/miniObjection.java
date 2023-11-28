@@ -76,13 +76,19 @@ public class miniObjection {
                 new DevSqaLoginScene().switchToDevSqaLoginScene(stage,mail,name,phone,"SQA",project,feature,devMsg,sqaMsg,"dev");
             }
             else {
-                Alert failure = new Alert(Alert.AlertType.ERROR);
-                failure.setTitle("Failed!");
-                failure.setHeaderText("Review Record Failed Please Try Again!");
-                failure.show();
+//                Alert failure = new Alert(Alert.AlertType.ERROR);
+//                failure.setTitle("Failed!");
+//                failure.setHeaderText("Review Record Failed Please Try Again!");
+//                failure.show();
+                throw new CustomException("revRecordFailed");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

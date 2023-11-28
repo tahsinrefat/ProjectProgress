@@ -16,7 +16,12 @@ public class ConnectDB {
             System.out.println("Connection Established Successfully!");
 
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("connect_db");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         return con;
     }

@@ -20,7 +20,7 @@ import java.sql.Statement;
 
 public class TeamleadLoginScene extends SceneController{
     @Override
-    public void switchToTeamleadLoginScene(Stage stage, String mail, String name, String phone, String rank, String project) {
+    public void switchToTeamleadLoginScene(Stage stage, String mail, String name, String phone, String rank, String project) throws CustomException{
         Pane root = new Pane();
 
         Font titleFont = new Font("Ramaraja", 70);
@@ -37,7 +37,11 @@ public class TeamleadLoginScene extends SceneController{
         logOutBtn.setCursor(Cursor.HAND);
         logOutBtn.setOnAction(logOutEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
-            backToLogin.switchToLogSignScene(null, stage);
+            try {
+                backToLogin.switchToLogSignScene(null, stage);
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Text detailText = new Text("Ongoing Current Projects");
@@ -71,7 +75,11 @@ public class TeamleadLoginScene extends SceneController{
         refreshBtn.setLayoutX(1480);
         refreshBtn.setLayoutY(175);
         refreshBtn.setOnAction(refreshEvent -> {
-            new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail, name, phone, rank, project);
+            try {
+                new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail, name, phone, rank, project);
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Button completeProjectBtn = new Button("Mark Project As Complete");
@@ -106,13 +114,22 @@ public class TeamleadLoginScene extends SceneController{
                 if (result== ButtonType.OK){
                     if (feature==completedFeature){
                         completeCurrentProject(mail,project);
-                        new TeamleadLoginScene().switchToHRLoginScene(stage,mail,name,phone,rank);
+                        try {
+                            new TeamleadLoginScene().switchToTeamleadLoginScene(stage,mail,name,phone,rank,project);
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     else {
-                        Alert failure = new Alert(Alert.AlertType.ERROR);
-                        failure.setTitle("Failed!");
-                        failure.setHeaderText("Some features still needs to be completed first!");
-                        failure.show();
+//                        Alert failure = new Alert(Alert.AlertType.ERROR);
+//                        failure.setTitle("Failed!");
+//                        failure.setHeaderText("Some features still needs to be completed first!");
+//                        failure.show();
+                        try {
+                            throw new CustomException("incompleteFeature");
+                        } catch (CustomException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             } );
@@ -312,7 +329,8 @@ public class TeamleadLoginScene extends SceneController{
                 }
                 curProjectTable.setItems(curData);
             } catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new CustomException("connect_db");
             }
         }
 
@@ -375,7 +393,8 @@ public class TeamleadLoginScene extends SceneController{
             }
             comProjectTable.setItems(curData);
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw new CustomException("db_connect");
         }
 
         Image logo = new Image("logo.png");
@@ -481,7 +500,12 @@ public class TeamleadLoginScene extends SceneController{
             }
             pair = new Pair<>(feature,completed_feature);
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new Exception("db_connect");
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
         return pair;
     }
@@ -504,23 +528,30 @@ public class TeamleadLoginScene extends SceneController{
                     success.show();
                 }
                 else {
-                    System.out.println("Completed Table");
-                    Alert failure = new Alert(Alert.AlertType.ERROR);
-                    failure.setTitle("Failed!");
-                    failure.setHeaderText("Project Completion Failed Please Try Again!");
-                    failure.show();
+//                    System.out.println("Completed Table");
+//                    Alert failure = new Alert(Alert.AlertType.ERROR);
+//                    failure.setTitle("Failed!");
+//                    failure.setHeaderText("Project Completion Failed Please Try Again!");
+//                    failure.show();
+                    throw new CustomException("proCompFail");
                 }
 
             }
             else {
-                System.out.println("Teamlead Release");
-                Alert failure = new Alert(Alert.AlertType.ERROR);
-                failure.setTitle("Failed!");
-                failure.setHeaderText("Project Completion Failed Please Try Again!");
-                failure.show();
+//                System.out.println("Teamlead Release");
+//                Alert failure = new Alert(Alert.AlertType.ERROR);
+//                failure.setTitle("Failed!");
+//                failure.setHeaderText("Project Completion Failed Please Try Again!");
+//                failure.show();
+                throw new CustomException("proComFail");
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

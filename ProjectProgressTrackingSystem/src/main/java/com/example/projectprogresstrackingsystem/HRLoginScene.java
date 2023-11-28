@@ -26,11 +26,11 @@ public class HRLoginScene extends SceneController {
 
         Font titleFont = new Font("Ramaraja", 70);
         Font anTitleFont = new Font("Ramaraja", 30);
-        Font smallerTitleFont = new Font("Ramaraja", 25);
+        Font smallerTitleFont = new Font("Ramaraja", 25);   ///font
         Font normalFont = new Font(20);
         Font logOutBtnFont = new Font(20);
 
-        Button logOutBtn = new Button("Logout");
+        Button logOutBtn = new Button("Logout"); ///LOGOUT
         logOutBtn.setFont(logOutBtnFont);
         logOutBtn.setLayoutX(1460);
         logOutBtn.setLayoutY(20);
@@ -38,7 +38,11 @@ public class HRLoginScene extends SceneController {
         logOutBtn.setCursor(Cursor.HAND);
         logOutBtn.setOnAction(logOutEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
-            backToLogin.switchToLogSignScene(null, stage);
+            try {
+                backToLogin.switchToLogSignScene(null, stage); ///LOGOUT TO LOGIN BACK
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Text detailText = new Text("Overall Projects");
@@ -51,7 +55,7 @@ public class HRLoginScene extends SceneController {
         nameText.setLayoutX(20);
         nameText.setLayoutY(200);
 
-        Text rankText = new Text("("+rank+")");
+        Text rankText = new Text("("+rank+")"); ///to show the rank
         rankText.setFont(smallerTitleFont);
         rankText.setLayoutX(22+nameText.getLayoutBounds().getWidth());
         rankText.setLayoutY(200);
@@ -89,13 +93,13 @@ public class HRLoginScene extends SceneController {
         onGoingProjectTxt.setLayoutX(20);
         onGoingProjectTxt.setLayoutY(290);
 
-        String tableColumnStyle = "-fx-font-size: 25px; -fx-font-family: 'Ramaraja';";
+        String tableColumnStyle = "-fx-font-size: 25px; -fx-font-family: 'Ramaraja';";  ///column
         TableView<Projects> table = new TableView<>();
         table.getSelectionModel().setCellSelectionEnabled(true);
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.setStyle("-fx-background-color: #1777e6;");
         table.setOnMouseClicked(event -> {
-            ObservableList<TablePosition> selectedCells = table.getSelectionModel().getSelectedCells();
+            ObservableList<TablePosition> selectedCells = table.getSelectionModel().getSelectedCells(); ///to determine the location of the click
             int row = -1;
             int col = -1;
             String value = "";
@@ -107,7 +111,7 @@ public class HRLoginScene extends SceneController {
                 System.out.println(row + " " + col);
             }
             System.out.println(value);
-            new HRProjectDetails().switchToProjectDetailsScene(stage, mail, name, phone, rank, value);
+            new HRProjectDetails().switchToHRProjectDetails(stage, mail, name, phone, rank, value);  ///proj details page
         });
         TableColumn<Projects, String> projectName = new TableColumn<>("Project Name");
         projectName.setPrefWidth(600);
@@ -262,7 +266,12 @@ public class HRLoginScene extends SceneController {
                 comProjectTable.setItems(data);
             }
         } catch (Exception e){
-            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
+//            e.printStackTrace();
         }
         comProjectName.setStyle("-fx-alignment: CENTER;");
         comProjectTable.setLayoutX(1140);
@@ -346,13 +355,18 @@ public class HRLoginScene extends SceneController {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            try {
+                throw new CustomException("db_connect");
+            } catch (CustomException ex) {
+                throw new RuntimeException(ex);
+            }
+//            e.printStackTrace();
         }
 
         new miniHRAddNewProject().HRAddNewProject(primaryStage,lead_map,mail,name,phone,rank);
     }
 
-    public Pair<Integer, Integer> completedFeatures(String lead_mail, String project){
+    public Pair<Integer, Integer> completedFeatures(String lead_mail, String project) throws CustomException {
         ConnectDB fetch = new ConnectDB();
         Pair<Integer, Integer> pair = new Pair<>(-1,-1);
         try (Connection con = fetch.connect()) {
@@ -368,7 +382,8 @@ public class HRLoginScene extends SceneController {
             }
             pair = new Pair<>(feature,completed_feature);
         } catch (Exception e){
-            e.printStackTrace();
+            throw new CustomException("db_connect");
+//            e.printStackTrace();
         }
         return pair;
     }

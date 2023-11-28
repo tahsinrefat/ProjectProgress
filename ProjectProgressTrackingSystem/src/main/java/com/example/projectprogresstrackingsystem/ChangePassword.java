@@ -31,7 +31,11 @@ public class ChangePassword extends SceneController{
         backBtn.setCursor(Cursor.HAND);
         backBtn.setOnAction(backEvent -> {
             LoginSignScene backToLogin = new LoginSignScene();
-            backToLogin.switchToLogSignScene(null,stage);
+            try {
+                backToLogin.switchToLogSignScene(null,stage);
+            } catch (CustomException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         Image welcome_logo = new Image("logo.png");
@@ -89,24 +93,40 @@ public class ChangePassword extends SceneController{
                         success.show();
                     }
                     else{
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Error!");
-                        error.setHeaderText("Couldn't change passwords!");
-                        error.show();
+//                        Alert error = new Alert(Alert.AlertType.ERROR);
+//                        error.setTitle("Error!");
+//                        error.setHeaderText("Couldn't change passwords!");
+//                        error.show();
+                        throw new CustomException("passNoChange");
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    try {
+                        throw new CustomException("db_connect");
+                    } catch (CustomException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             } else if (!newInPass.equals(conInPass)) {
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Passwords doesn't match!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Passwords doesn't match!");
+//                error.show();
+                try {
+                    throw new CustomException("passNoMatch");
+                } catch (CustomException e) {
+                    throw new RuntimeException(e);
+                }
             } else{
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Fields cannot be empty!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Fields cannot be empty!");
+//                error.show();
+                try {
+                    throw new CustomException("invalidInput");
+                } catch (CustomException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

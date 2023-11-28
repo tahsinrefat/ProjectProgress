@@ -134,7 +134,11 @@ public class miniLeadAddFeature {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                new TeamleadLoginScene().switchToTeamleadLoginScene(stage, mail, name, phone, rank,project);
+                try {
+                    new TeamleadLoginScene().switchToTeamleadLoginScene(stage, mail, name, phone, rank,project);
+                } catch (CustomException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

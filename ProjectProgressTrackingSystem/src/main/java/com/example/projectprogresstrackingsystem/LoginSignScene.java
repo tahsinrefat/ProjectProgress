@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class LoginSignScene extends SceneController{
     @Override
-    public void switchToLogSignScene(ActionEvent event, Stage stage) {
+    public void switchToLogSignScene(ActionEvent event, Stage stage) throws CustomException{
         Pane root = new Pane();
 
         Image welcome_logo = new Image("logo.png");
@@ -87,10 +87,17 @@ public class LoginSignScene extends SceneController{
             String inPassword = passwordField.getText();
             String rankSet = setRank.getValue();
             if (inEmail==null || inPassword==null || rankSet.equals("--Select a Rank--")){
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("At least One of the Inputs Are Invalid!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("At least One of the Inputs Are Invalid!");
+//                error.show();
+                try {
+//                    System.out.println("here I print also");
+                    throw new CustomException("invalidInput");
+                } catch (CustomException e) {
+//                    System.out.println("here I printed");
+                    throw new RuntimeException(e);
+                }
             }
             else{
                 System.out.println(inEmail+" "+ inPassword+ " "+ rankSet);
@@ -137,12 +144,17 @@ public class LoginSignScene extends SceneController{
                             }
                         }
                     }
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error!");
-                    error.setHeaderText("Wrong Credentials Provided!");
-                    error.show();
+//                    Alert error = new Alert(Alert.AlertType.ERROR);
+//                    error.setTitle("Error!");
+//                    error.setHeaderText("Wrong Credentials Provided!");
+//                    error.show();
+                    throw new CustomException("wrongCreds");
                 } catch (Exception e){
-                    e.printStackTrace();
+                    try {
+                        throw new CustomException("db_connect");
+                    } catch (CustomException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
@@ -234,13 +246,19 @@ public class LoginSignScene extends SceneController{
                     }
 
                 }
-                Alert error = new Alert(Alert.AlertType.ERROR);
-                error.setTitle("Error!");
-                error.setHeaderText("Your Email Ain't in Database for Sign Up!");
-                error.show();
+//                Alert error = new Alert(Alert.AlertType.ERROR);
+//                error.setTitle("Error!");
+//                error.setHeaderText("Your Email Ain't in Database for Sign Up!");
+//                error.show();
+                throw new CustomException("noMail");
 
             }catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                try {
+                    throw new CustomException("db_connect");
+                } catch (CustomException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
